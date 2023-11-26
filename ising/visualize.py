@@ -1,7 +1,9 @@
+import os
+import shutil
+
 import numpy as np
 from PIL import Image
 from ipywidgets import interact
-import cv2
 
 
 def lattice_to_image(lattice: np.array) -> Image:
@@ -50,3 +52,20 @@ def save_gif(images: [Image], filename: str) -> None:
         append_images=images[1:],
         loop=0,
     )
+
+
+def split_gif(filename: str, num_key_frames: int = None) -> None:
+    """Split gif loicated at {filename}.gif into separate images.
+    A folder with the same name gets created in the same directory."""
+
+    with Image.open(f"{filename}.gif") as im:
+        if num_key_frames is None:
+            num_key_frames = im.n_frames
+
+        if os.path.exists(filename):
+            shutil.rmtree(filename)
+        os.makedirs(filename)
+
+        for i in range(num_key_frames):
+            im.seek(im.n_frames // num_key_frames * i)
+            im.save(f"{filename}/im-{i}.png")

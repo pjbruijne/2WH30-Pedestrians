@@ -36,6 +36,11 @@ class lattice(ABC):
         is determined via affine transformation of [-1, 1] -> [0, 255]. Is dependent on implementation of subclass."""
         pass
     
+    def lattices_to_images(self) -> list[Image.Image]:
+        """Turn list of 2d simulation steps into an image, the value of each pixel
+        is determined via affine transformation of [-1, 1] -> [0, 255]. Is dependent on implementation of subclass."""
+        self.lattices_to_images(1)
+    
     @abstractmethod
     def upscale_lattice(self, matrix: np.ndarray[int,int], scale_factor: int) -> np.ndarray[int,int]:
         """Upscale array by integer multiple in all directions."""

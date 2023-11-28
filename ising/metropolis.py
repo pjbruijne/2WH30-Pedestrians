@@ -23,7 +23,7 @@ def square_neighbour_sum(lattice: np.array, x: int, y: int) -> int:
 
 
 @njit()
-def simulate(lattice: np.array, J: float, B: float, T: float, steps: int):
+def simulate(lattice: np.ndarray[int, int], J: float, B: float, T: float, steps: int):
     """Simulate ising model using the Metropolis algorithm.
     J : global spin-spin interaction constant,
     B : external magnetic field"""

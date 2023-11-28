@@ -113,7 +113,13 @@ class triangularlattice2d(lattice2d):
         a,b = X
         width, height = self.matrix.shape
         sum = 0
-
+        
+        # Pattern:
+        #   .   .   .   .   .
+        #     .   .   .   .   .
+        #   .   .   .   .   .
+        #     .   .   .   .   .
+        
         if a > 0:  # a left beighbour exists
             sum += self.matrix[a - 1, b]
         if a < width - 1:  # a right beighbour exists
@@ -138,6 +144,13 @@ class hexagonallattice2d(lattice2d):
         a,b = X
         width, height = self.matrix.shape
         sum = 0
+        
+        # Pattern:
+        #     .  .      .  . 
+        #   .      .  .      .
+        #     .  .      .  . 
+        #   .      .  .      .
+        #     .  .      .  .
         
         if (a+b) & 1:     # points left
             if a > 0:  # a left beighbour exists

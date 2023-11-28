@@ -13,7 +13,7 @@ class lattice(ABC):
     @njit()
     @abstractmethod
     def neighbor_sum(self, X:tuple[int,...]):
-        """Calculates the sum of the neighbours of the spin at position (x, y). Implementation depends on subclass."""
+        """Calculates the sum of the neighbours of the spin at position (x1,x2,...). Implementation depends on subclass."""
         pass
     
     @njit()
@@ -21,25 +21,22 @@ class lattice(ABC):
     def simulate(self, J: float, B: float, T: float, steps: int):
         """Simulate ising model using the Metropolis algorithm.
         J : global spin-spin interaction constant,
-        B : external magnetic field"""
+        B : external magnetic field,
+        T : global temperature,
+        steps : total amount of iterations before the method terminates"""
         pass
     
     @abstractmethod
-    def lattice_to_image(self, matrix: np.ndarray[int,int], scale_factor: int) -> Image.Image:
+    def lattice_to_image(self, matrix: np.ndarray[int,int], scale_factor: int = 1) -> Image.Image:
         """Turn 2d array into an image, the value of each pixel
         is determined via affine transformation of [-1, 1] -> [0, 255]. Is dependent on implementation of subclass."""
         pass
 
     @abstractmethod
-    def lattices_to_images(self, scale_factor: int) -> list[Image.Image]:
+    def lattices_to_images(self, scale_factor: int = 1) -> list[Image.Image]:
         """Turn list of 2d simulation steps into an image, the value of each pixel
-        is determined via affine transformation of [-1, 1] -> [0, 255]. Is dependent on implementation of subclass."""
+        is determined via affine transformation of [-1, 1] -> [0, 255]."""
         pass
-    
-    def lattices_to_images(self) -> list[Image.Image]:
-        """Turn list of 2d simulation steps into an image, the value of each pixel
-        is determined via affine transformation of [-1, 1] -> [0, 255]. Is dependent on implementation of subclass."""
-        self.lattices_to_images(1)
     
     @abstractmethod
     def upscale_lattice(self, matrix: np.ndarray[int,int], scale_factor: int) -> np.ndarray[int,int]:
@@ -54,10 +51,8 @@ class lattice(ABC):
     
 class lattice2d(lattice):
     
-    def __init__(self, width: int, height: int, states: list[int] = None) -> None:
+    def __init__(self, width: int, height: int, states: list[int] = [-1,1]) -> None:
         
-        if states is None:
-            states = [-1, 1]
         self.matrix:np.ndarray[int,int] = np.random.choice(states, size=(width, height))
         self.initialmatrix = self.matrix.copy()
         self.simulation:list[np.ndarray[int,int]] = []
@@ -85,7 +80,7 @@ class lattice2d(lattice):
             self.simulation.append(self.matrix.copy())
         return self.simulation
 
-    def lattices_to_images(self, scale_factor:int) -> list[Image.Image]:
+    def lattices_to_images(self, scale_factor: int = 1) -> list[Image.Image]:
         return [self.lattice_to_image(matrix, scale_factor) for matrix in self.simulation]
 
     def upscale_lattice(self, matrix: np.ndarray[int, int], scale_factor: int) -> np.ndarray[int, int]:
@@ -109,7 +104,7 @@ class squarelattice2d(lattice2d):
 
         return sum
     
-    def lattice_to_image(self, matrix: np.ndarray[int, int], scale_factor:int) -> Image:
+    def lattice_to_image(self, matrix: np.ndarray[int, int], scale_factor: int = 1) -> Image:
         return Image.fromarray(np.uint8((self.upscale_lattice(matrix, scale_factor) + 1) * 0.5 * 255))
     
 class triangularlattice2d(lattice2d):
@@ -140,7 +135,7 @@ class triangularlattice2d(lattice2d):
 
         return sum
     
-    def lattice_to_image(self, matrix: np.ndarray[int, int], scale_factor: int) -> Image:
+    def lattice_to_image(self, matrix: np.ndarray[int, int], scale_factor: int = 1) -> Image:
         pass
     
 class hexagonallattice2d(lattice2d):
@@ -175,7 +170,7 @@ class hexagonallattice2d(lattice2d):
         
         return sum
     
-    def lattice_to_image(matrix: np.ndarray[int, int]) -> Image:
+    def lattice_to_image(self, matrix: np.ndarray[int, int], scale_factor: int = 1) -> Image:
         pass
 
 A = squarelattice2d(10,10)

@@ -7,33 +7,35 @@ def square_neighbour_sum(lattice: np.array, x: int, y: int) -> int:
     """Calculates the sum of the neighbours of the spin at position (x, y)
     given a square lattice."""
 
-    width, height = lattice.shape
+    n, m = lattice.shape
     neighbour_sum = 0
 
     if x > 0:  # a left beighbour exists
         neighbour_sum += lattice[x - 1, y]
-    if x < width - 1:  # a right beighbour exists
+    if x < n - 1:  # a right beighbour exists
         neighbour_sum += lattice[x + 1, y]
     if y > 0:  # an upper beighbour exists
         neighbour_sum += lattice[x, y - 1]
-    if y < height - 1:  # a lower beighbour exists
+    if y < m - 1:  # a lower beighbour exists
         neighbour_sum += lattice[x, y + 1]
 
     return neighbour_sum
 
 
 @njit()
-def simulate(lattice: np.ndarray[int, int], J: float, B: float, T: float, steps: int):
+def simulate(
+    lattice: np.ndarray[int, int], J: float, B: float, T: float, steps: int
+) -> [np.ndarray[int, int]]:
     """Simulate ising model using the Metropolis algorithm.
     J : global spin-spin interaction constant,
     B : external magnetic field"""
 
     images = [lattice.copy()]
-    width, height = lattice.shape
+    n, m = lattice.shape
 
     for _ in range(steps):
-        x = np.random.randint(width)
-        y = np.random.randint(height)
+        x = np.random.randint(n)
+        y = np.random.randint(m)
 
         spin = lattice[x, y]
 

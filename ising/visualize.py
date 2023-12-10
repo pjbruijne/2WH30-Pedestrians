@@ -17,7 +17,7 @@ def lattices_to_images(lattices: list[np.ndarray[int,int]]) -> list[Image.Image]
     """Turn 2d array into an image, the value of each pixel
     is determined via affine transformation of [-1, 1] -> [0, 255]."""
 
-    return [lattice_to_image(lattice) for lattice in lattices]
+    return [lattice_to_image(lattices[i]) for i in range(len(lattices))]
 
 
 def display_experiment(lattices: list[Image.Image]):

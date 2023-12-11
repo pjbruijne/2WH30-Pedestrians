@@ -44,9 +44,9 @@ def simulate(
 
         neighbour_sum = square_neighbour_sum(lattice, x, y)
 
-        dE = 2 * spin * (J * neighbour_sum - h)
+        dE = 2 * spin * (J * neighbour_sum + h)
 
-        if (neighbour_sum * spin < 0) or (np.random.random(1) < np.exp(-dE / T)):
+        if (np.random.random(1) < np.exp(-dE / T)):
             lattice[x, y] = -lattice[x, y]
 
         lattices[i] = lattice.copy()

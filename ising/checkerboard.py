@@ -16,7 +16,7 @@ def unweave_checkerboard(lattice: SquareLattice) -> tuple[SquareLattice, SquareL
 
     n, m = lattice.shape
 
-    assert m % 2 == 0, "Cannot unweave uneven checkerboard; uneven number or columns."
+    assert m % 2 == 0, "Cannot unweave uneven checkerboard; uneven number of columns."
 
     mask = np.indices((n, m)).sum(axis=0) % 2 == 0
 

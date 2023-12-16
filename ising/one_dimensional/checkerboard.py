@@ -1,8 +1,8 @@
 import numpy as np
 
 AdjustedMagneticField = np.ndarray[int] | float
-LineLattice = np.ndarray[int]
-Lattices = np.ndarray[int, int]
+LineLattice = np.ndarray
+Lattices = np.ndarray
 WhiteSquares = str
 BlackSquares = str
 SquareColor = {WhiteSquares, BlackSquares}

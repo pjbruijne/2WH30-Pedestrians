@@ -3,8 +3,8 @@ from scipy.ndimage import convolve
 
 
 AdjustedMagneticField = np.ndarray[int, int] | float
-Lattice = np.ndarray[int, int]
-Lattices = np.ndarray[int, int, int]
+Lattice = np.ndarray
+Lattices = np.ndarray
 WhiteSquares = str
 BlackSquares = str
 SquareColor = {WhiteSquares, BlackSquares}

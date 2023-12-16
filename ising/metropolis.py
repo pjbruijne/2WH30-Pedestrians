@@ -1,8 +1,8 @@
 import numpy as np
 from numba import njit
 
-Lattice = np.ndarray[int, int]
-Lattices = np.ndarray[int, int, int]
+Lattice = np.ndarray
+Lattices = np.ndarray
 
 
 @njit

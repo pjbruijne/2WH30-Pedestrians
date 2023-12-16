@@ -47,7 +47,7 @@ def generate_random_array(n: int, m: int) -> Lattice:
 
 
 def neighbour_sum_square(lattice: Lattice) -> Lattice:
-    """Compute the square neighboursum for the entire square lattice."""
+    """Compute the neighboursum of each spin in a square lattice."""
 
     kernel = np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]])
 

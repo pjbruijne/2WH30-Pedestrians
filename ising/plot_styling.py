@@ -1,5 +1,6 @@
 from cycler import cycler
 import matplotlib as mpl
+import plotly.plotly as py
 
 
 COLORS = ["#F0A830", "#F07818", "#78C0A8", "#FCEBB6", "#5E412F"]

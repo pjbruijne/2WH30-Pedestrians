@@ -29,3 +29,6 @@ def getCorrelationCoefficient_2(node:tuple[int,...], simulation:list[np.ndarray[
         expSpinProduct /= len(simulation)
         return expSpinProduct - (expSpin**2)
     else: pass
+
+
+def magnetization()

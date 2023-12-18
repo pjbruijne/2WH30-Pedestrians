@@ -1,6 +1,6 @@
 import numpy as np
 
-AdjustedMagneticField = np.ndarray[int] | float
+AdjustedMagneticField = float
 LineLattice = np.ndarray
 Lattices = np.ndarray
 WhiteSquares = str
@@ -47,7 +47,13 @@ def generate_random_array(l: int) -> LineLattice:
 def neighbour_sum(line_lattice: LineLattice) -> LineLattice:
     """Compute the neighbour sum for each spin in a line lattice."""
 
-    return line_lattice + np.roll(line_lattice, 1)
+    return line_lattice * np.roll(line_lattice, 1)
+
+
+def true_hamiltonian(line_lattice: LineLattice, h_J: float) -> LineLattice:
+    """Compute the energy contribution for each spin in a line lattice."""
+
+    return - neighbour_sum(line_lattice) - h_J * line_lattice
 
 
 def hamiltonian(line_lattice: LineLattice, h_J: float) -> LineLattice:

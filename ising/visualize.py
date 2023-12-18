@@ -71,7 +71,7 @@ def save_gif(images: list[Image.Image], filename: str) -> None:
 
 
 def split_gif(filename: str, num_key_frames: int = None) -> None:
-    """Split gif loicated at {filename}.gif into separate images.
+    """Split gif located at {filename}.gif into separate images.
     A folder with the same name gets created in the same directory."""
 
     with Image.open(f"{filename}.gif") as im:

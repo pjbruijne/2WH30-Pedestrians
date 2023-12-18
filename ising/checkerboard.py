@@ -1,3 +1,4 @@
+from typing import Generator
 import numpy as np
 from scipy.ndimage import convolve
 
@@ -69,14 +70,13 @@ def simulate(
     """Simulate evolution of a lattice using the checkerboard algorithm.
     This simulation algorithm converges faster than the default metropolis algorithm."""
 
-    if steps % 2 == 1:
-        steps += 1
+    assert steps % 2 == 0, "Even number of steps required"
 
     n, m = lattice.shape
-    lattices = np.empty((steps + 1, n, m))
+    lattices = np.empty((steps, n, m), dtype=np.int8)
     lattices[0] = lattice.copy()
 
-    for i in range(1, steps + 1, 2):
+    for i in range(1, steps - 1, 2):
         # update the white squares
         dE_white, _ = unweave_checkerboard(hamiltonian(lattice, h_J))
 
@@ -95,7 +95,45 @@ def simulate(
         lattice[mask] = -lattice[mask]
         lattices[i + 1] = lattice.copy()
 
+    dE_white, _ = unweave_checkerboard(hamiltonian(lattice, h_J))
+
+    mask = generate_random_array(n, m // 2) < np.exp(-dE_white / T)
+    mask = _weave_checkerboard(mask, "white")
+
+    lattice[mask] = -lattice[mask]
+    lattices[steps-1] = lattice.copy()
+
     return lattices
+
+
+def simulation_frame_generator(
+    lattice: Lattice,
+    h_J: AdjustedMagneticField,
+    T: float,
+) -> Generator[Lattice, None, None]:
+    """Generator that evolves a lattice to equillibrium and yields each frame
+    in the process."""
+
+    n, m = lattice.shape
+
+    while True:
+        # update the white squares
+        dE_white, _ = unweave_checkerboard(hamiltonian(lattice, h_J))
+
+        mask = generate_random_array(n, m // 2) < np.exp(-dE_white / T)
+        mask = _weave_checkerboard(mask, "white")
+
+        lattice[mask] = -lattice[mask]
+        yield lattice.copy()
+
+        # update the black squares
+        _, dE_black = unweave_checkerboard(hamiltonian(lattice, h_J))
+
+        mask = generate_random_array(n, m // 2) < np.exp(-dE_black / T)
+        mask = _weave_checkerboard(mask, "black")
+
+        lattice[mask] = -lattice[mask]
+        yield lattice.copy()
 
 
 # The graveyard of unused functions

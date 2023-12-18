@@ -45,12 +45,16 @@ def getCorrelationCoefficient_3(simulation:list[np.ndarray[int,int]], useWrap:bo
             samples = 0
             sum = 0
             for i in range(L):   
-                if r <= i:
-                    sum += lattice[i,i]*(lattice[i-r,i] + lattice[i,i-r])
-                    samples += 2
-                if i < L-r:
-                    sum += lattice[i,i]*(lattice[i+r,i] + lattice[i,i+r])
-                    samples += 2
+                if not useWrap:
+                    if r <= i:
+                        sum += lattice[i,i]*(lattice[i-r,i] + lattice[i,i-r])
+                        samples += 2
+                    if i < L-r:
+                        sum += lattice[i,i]*(lattice[i+r,i] + lattice[i,i+r])
+                        samples += 2
+                if useWrap:
+                    sum += lattice[i,i]*(lattice[(i+r) % L,i] + lattice[i,(i+r) % L] + lattice[(i-r) % L,i] + lattice[i,(i-r) % L])
+                    samples += 4
             result[r] += sum / samples
     result /= len(simulation)-1
     return result

@@ -1,11 +1,12 @@
 import numpy as np
 from numba import njit
 
-SquareLattice = np.ndarray[int, int]
+Lattice = np.ndarray
+Lattices = np.ndarray
 
 
 @njit
-def square_neighbour_sum(lattice: np.array, x: int, y: int) -> int:
+def square_neighbour_sum(lattice: Lattice, x: int, y: int) -> int:
     """Calculates the sum of the neighbours of the spin at position (x, y)
     given a square lattice."""
 
@@ -25,9 +26,7 @@ def square_neighbour_sum(lattice: np.array, x: int, y: int) -> int:
 
 
 @njit
-def simulate(
-    lattice: np.ndarray[int, int], J: float, h: float, T: float, steps: int
-) -> np.ndarray[SquareLattice]:
+def simulate(lattice: Lattice, h_J: float, T: float, steps: int) -> Lattices:
     """Simulate ising model using the Metropolis algorithm.
     J : global spin-spin interaction constant,
     h : external magnetic field"""
@@ -44,9 +43,9 @@ def simulate(
 
         neighbour_sum = square_neighbour_sum(lattice, x, y)
 
-        dE = 2 * spin * (J * neighbour_sum + h)
+        dE = 2 * spin * (neighbour_sum + h_J)
 
-        if (np.random.random(1) < np.exp(-dE / T)):
+        if np.random.random(1) < np.exp(-dE / T):
             lattice[x, y] = -lattice[x, y]
 
         lattices[i] = lattice.copy()

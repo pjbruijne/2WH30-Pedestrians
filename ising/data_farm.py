@@ -50,7 +50,7 @@ def save_as_npz(
     data = {kind: array}
 
     np.savez(join(base_path, file_id), **data)
-    print("Saved succesfully!")
+    print(f"Saved succesfully (h_J={h_J}, T={T})!")
 
 
 def int_if_possible(x):
@@ -115,8 +115,13 @@ def moving_average(array: np.array, n: int):
 
 
 def constant_harvester(
-    lattice: Lattice, Ts: np.ndarray, h_J: float, iterations: int, file_id: str
-):
+    lattice: Lattice,
+    Ts: np.ndarray,
+    h_J: float,
+    iterations: int,
+    file_id: str,
+    mag_only: bool = True,
+) -> None:
     """For every value of T in Ts, simulate using checkerboard fixed
     number of iterations. Save both lattices and magnetization data in simulation-data
     using 100{file_id}."""
@@ -129,8 +134,8 @@ def constant_harvester(
         )
 
         mag = magnetization_from_lattices(lattices=lattices)
-
-        save_lattices_data(array=lattices, h_J=h_J, T=T, file_id=file_id)
+        if not mag_only:
+            save_lattices_data(array=lattices, h_J=h_J, T=T, file_id=file_id)
         save_magnetization_data(array=mag, h_J=h_J, T=T, file_id=file_id)
 
     print("Done harvesting!")
@@ -153,8 +158,57 @@ def magnetization_convergence(magnetization: MagnetizationData, h_J: float, T: f
 
     plt.legend(["Magnetization", "Moving avg magnetization", "Avg upto index"])
 
-    plt.ylabel("Magnetization $(M/N)$")
+    plt.ylabel("Magnetization")
     plt.xlabel("Iteration $(frame)$")
     plt.title(f"$h/J={h_J}, T={T}$")
+
+    return plt.gca()
+
+
+def get_magnetization_data(h_J: float):
+    base_path = f"simulation-data/magnetization/h_J={h_J}"
+
+    Ts = [float(f.split("=")[1]) for f in os.listdir(base_path)]
+
+    Ts.sort()
+
+    l = len(Ts)
+    avg_magnetizations = np.empty((l,))
+
+    for i, T in enumerate(Ts):
+        magnetization_dict = load_magnetization_data(h_J=h_J, T=T)
+        mags = []
+        for key in magnetization_dict.keys():
+            array = magnetization_dict[key]["magnetization"]
+
+            l = len(array)
+            # print(array)
+            # farm.magnetization_convergence(array, 0, T)
+            mags.append(np.average(array[l // 5 :]))
+            # print(mags)
+
+        avg_magnetizations[i] = np.average(mags)
+    return Ts, avg_magnetizations
+
+
+def magnetization_plot(h_J: float, ylim: tuple[int, int]):
+    """Uses all magnetization data stored in the simulation-data folder
+    with the given h_J parameter.
+    If no data is available for the parameter value nothing will be returned."""
+
+    import ising.plot_styling
+
+    Ts, magnetization = get_magnetization_data(h_J)
+    (l,) = magnetization.shape
+
+    plt.ylim(*ylim)
+
+    plt.plot(Ts, abs(magnetization))
+
+    plt.legend(["Magnetization"])
+
+    plt.ylabel("Magnetization")
+    plt.xlabel("Temperature")
+    plt.title(f"$h/J={h_J}$")
 
     return plt.gca()

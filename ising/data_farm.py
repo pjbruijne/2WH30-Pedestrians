@@ -16,6 +16,8 @@ import matplotlib.pyplot as plt
 Lattice = np.ndarray
 Lattices = np.ndarray
 MagnetizationData = np.ndarray
+LineLattice = np.ndarray
+LineLattices = np.ndarray
 
 
 def save_as_npz(
@@ -90,6 +92,12 @@ def magnetization_from_lattices(lattices: Lattices) -> MagnetizationData:
     """Compute the average magnetization for each lattice in an array of lattices."""
 
     return np.average(lattices, axis=(1, 2))
+
+
+def magnetization_from_line_lattices(line_lattices: LineLattices) -> MagnetizationData:
+    """Compute the average magnetization for each line_lattice in an array of line lattices."""
+
+    return np.average(line_lattices, axis=(1))
 
 
 def average_upto_index(array: np.array) -> np.array:

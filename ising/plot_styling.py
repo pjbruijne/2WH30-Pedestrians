@@ -2,8 +2,8 @@ from cycler import cycler
 import matplotlib as mpl
 
 
-COLORS = ["#F0A830", "#F07818", "#78C0A8", "#FCEBB6", "#5E412F"]
-LINE_CYCLER = cycler(color=COLORS) + cycler(linestyle=["-", ":", "--", "-.", "-"])
+COLORS = ["#003F5C", "#FF6361", "#58508D", "#FFA600"]
+LINE_CYCLER = cycler(color=COLORS) + cycler(linestyle=["-", "--", ":", "-"])
 
 mpl.rcParams.update(
     {

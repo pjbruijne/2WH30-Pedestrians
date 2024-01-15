@@ -47,7 +47,7 @@ def generate_random_array(l: int) -> LineLattice:
 def neighbour_sum(line_lattice: LineLattice) -> LineLattice:
     """Compute the neighbour sum for each spin in a line lattice."""
 
-    return line_lattice * np.roll(line_lattice, 1)
+    return np.roll(line_lattice, -1) + np.roll(line_lattice, 1)
 
 
 def true_hamiltonian(line_lattice: LineLattice, h_J: float) -> LineLattice:

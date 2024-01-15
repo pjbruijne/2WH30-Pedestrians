@@ -6,3 +6,4 @@ def random_lattice(l, states=None):
         states = [-1, 1]
 
     return np.random.choice(states, size=(l))
+    

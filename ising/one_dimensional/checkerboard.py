@@ -50,10 +50,10 @@ def neighbour_sum(line_lattice: LineLattice) -> LineLattice:
     return np.roll(line_lattice, -1) + np.roll(line_lattice, 1)
 
 
-def true_hamiltonian(line_lattice: LineLattice, h_J: float) -> LineLattice:
+def H(line_lattice: LineLattice, h_J: float) -> LineLattice:
     """Compute the energy contribution for each spin in a line lattice."""
 
-    return - neighbour_sum(line_lattice) - h_J * line_lattice
+    return - (0.5*neighbour_sum(line_lattice) - h_J)* line_lattice
 
 
 def hamiltonian(line_lattice: LineLattice, h_J: float) -> LineLattice:

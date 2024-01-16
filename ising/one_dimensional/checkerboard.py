@@ -53,13 +53,16 @@ def neighbour_sum(line_lattice: LineLattice) -> LineLattice:
 def true_hamiltonian(line_lattice: LineLattice, h_J: float) -> LineLattice:
     """Compute the energy contribution for each spin in a line lattice."""
 
-    return - neighbour_sum(line_lattice) - h_J * line_lattice
+    return - line_lattice*np.roll(line_lattice, 1) - h_J * line_lattice
 
 
 def hamiltonian(line_lattice: LineLattice, h_J: float) -> LineLattice:
     """Compute the energy contribution for each spin in a line lattice."""
 
     return 2 * (neighbour_sum(line_lattice) + h_J) * line_lattice
+
+def cv_from_lattices(lattices, h_J, T):
+    return np.var( [true_hamiltonian(lattice, h_J)*T for lattice in lattices] )
 
 
 def simulate(lattice: LineLattice, h_J: float, T: float, steps: int):

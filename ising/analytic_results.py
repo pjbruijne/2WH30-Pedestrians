@@ -10,3 +10,10 @@ def magnetization2d(T):
 def magnetization1d(T, h_J):
     return np.sinh(h_J/T) / np.sqrt( np.sinh(h_J/T)**2 + np.exp(-4*(1/T)) ) 
 
+
+def cv2d(T, Tc, B):
+    return B*np.log(abs(T-Tc))
+
+
+
+

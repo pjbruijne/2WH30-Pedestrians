@@ -149,7 +149,7 @@ def constant_harvester(
     print("Done harvesting!")
 
 
-def magnetization_convergence(magnetization: MagnetizationData, h_J: float, T: float):
+def magnetization_convergence(magnetization: MagnetizationData, h_J: float, T: float, process=False):
     """Plot magnetization together with some smoothened versions of it.
     This function can help to see if and how the magnetization converges
     during the simulation process."""
@@ -161,8 +161,10 @@ def magnetization_convergence(magnetization: MagnetizationData, h_J: float, T: f
     plt.ylim(-1.1, 1.1)
 
     plt.plot(magnetization)
-    plt.plot(moving_average(magnetization, l // 10))
-    plt.plot(average_upto_index(magnetization))
+
+    if process:
+        plt.plot(moving_average(magnetization, l // 10))
+        plt.plot(average_upto_index(magnetization))
 
     plt.legend(["Magnetization", "Moving avg magnetization", "Avg upto index"])
 

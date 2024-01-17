@@ -6,7 +6,7 @@ from PIL import Image
 from ipywidgets import interact
 
 
-def line_lattice_to_image(line_lattice, w=2, h=10):
+def line_lattice_to_image(line_lattice, w=10, h=20):
     (l,) = line_lattice.shape
 
     line_lattice = line_lattice.repeat(w).reshape((1, l * w)).repeat(h, axis=0)

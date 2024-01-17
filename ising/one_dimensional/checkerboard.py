@@ -62,7 +62,7 @@ def hamiltonian(line_lattice: LineLattice, h_J: float) -> LineLattice:
     return 2 * (neighbour_sum(line_lattice) + h_J) * line_lattice
 
 def cv_from_lattices(lattices, h_J, T):
-    return np.var( [true_hamiltonian(lattice, h_J)*T for lattice in lattices] )
+    return np.var( [H(lattice, h_J)*T for lattice in lattices] )
 
 
 def simulate(lattice: LineLattice, h_J: float, T: float, steps: int):
